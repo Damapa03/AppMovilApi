@@ -13,13 +13,15 @@ class TaskViewModel(private val token: String) : ViewModel() {
     private val _uiState = MutableStateFlow(TaskUiState())
     val uiState: StateFlow<TaskUiState> = _uiState.asStateFlow()
 
+    private val bearerToken = "Bearer $token"
+
     private val apiService = ApiService.create()
 
     suspend fun loadAdminTasks(){
         try {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
 
-            val tasks = apiService.getAllTasks(token)
+            val tasks = apiService.getAllTasks(bearerToken)
 
             _uiState.update {
                 it.copy(
@@ -42,7 +44,7 @@ class TaskViewModel(private val token: String) : ViewModel() {
         try {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
 
-            val tasks = apiService.getUserTasks(username, token)
+            val tasks = apiService.getUserTasks(username, bearerToken)
 
             _uiState.update {
                 it.copy(
@@ -64,7 +66,7 @@ class TaskViewModel(private val token: String) : ViewModel() {
     suspend fun updateTaskStatus(taskId: Int, isCompleted: Boolean) {
         try {
             val updateRequest = TaskUpdateRequest(null,null,null,completada = isCompleted)
-            apiService.updateTaskStatus(taskId, updateRequest,token)
+            apiService.updateTaskStatus(taskId, updateRequest,bearerToken)
 
             // Actualizar la lista local después de actualizar en el servidor
             _uiState.update { currentState ->
