@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.appmovilapi.utils.obtenerRolesDesdeToken
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,9 +41,14 @@ fun TaskListScreen(
     val uiState by taskViewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
 
+    val roles = obtenerRolesDesdeToken(token)
+
 
     // Efecto para cargar las tareas al entrar a la pantalla
     LaunchedEffect(username) {
+        if("ROLE_ADMIN" in roles){
+            ejecutarFuncionAdmin(taskViewModel)
+        }
         taskViewModel.loadTasks(username)
     }
 
@@ -91,6 +97,9 @@ fun TaskListScreen(
                     Button(
                         onClick = {
                             scope.launch {
+                                if ("ROLE_ADMIN" in roles){
+                                    ejecutarFuncionAdmin(taskViewModel)
+                                }
                                 taskViewModel.loadTasks(username)
                             }
                         }
@@ -127,4 +136,9 @@ fun TaskListScreen(
             }
         }
     }
+}
+suspend fun ejecutarFuncionAdmin(taskViewModel: TaskViewModel) {
+    println("🔹 Usuario con ROLE_ADMIN detectado. Ejecutando función especial...")
+    // Aquí puedes realizar alguna acción especial, como cargar todas las tareas
+    taskViewModel.loadAdminTasks()
 }
