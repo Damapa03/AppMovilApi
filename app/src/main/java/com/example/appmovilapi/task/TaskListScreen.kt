@@ -39,7 +39,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.appmovilapi.Task
 import com.example.appmovilapi.utils.decodeJwt
 import com.example.appmovilapi.utils.getRolesFromJwt
-import com.example.appmovilapi.utils.obtenerRolesDesdeToken
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,26 +54,6 @@ fun TaskListScreen(
     val scope = rememberCoroutineScope()
 
     val errorShown = remember { mutableStateOf(false) }
-
-    val publicKey = """
-        -----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvcjjvMc4R7zvSMCCol1G
-HcHUFKwV+sTn6aM8II6TT2vPIPyhVOG0oiykTHNCoE3rTH/XSOHz7Nek2vg5RgmP
-DOPrDQEm7UFRedEPy5NBCthA2j8/ZN0KJ3pGkguV4GRAFlXJzMFAx36HpDOpnWYP
-6zkurq6r/+AyZJ5HGrsU9vGe5Rgs9SOwvq+1cXuioSZmTp3klZpbQrwwi8cNBBU+
-lfW+reJvLXDffUSMVAX4iGRoJceXIWNcWj+xVXe7L182OP1E0oSHDCYfgzKF1zlA
-EhCSvsjK8MbbWrFUL9xig4WIUd6qx78vv16N+2k7kOsObNhvjZ4GzTHBXLplBLjI
-HwIDAQAB
------END PUBLIC KEY-----
-    """.trimIndent()
-
-    val decodedJWT = decodeJwt(token, publicKey)
-    var roles = listOf("")
-
-    decodedJWT?.let {
-        roles = getRolesFromJwt(it)
-        println("Roles: $roles")
-    } ?: println("Token invalido o firma incorrecta")
 
     LaunchedEffect(key1 = Unit) {
         if (username.isNotEmpty() && token.isNotEmpty()) {
