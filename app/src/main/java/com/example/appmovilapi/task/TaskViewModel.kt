@@ -21,30 +21,6 @@ class TaskViewModel(private val token: String) : ViewModel() {
 
     private val apiService = ApiService.create()
 
-    suspend fun loadAdminTasks(){
-
-        try {
-            _uiState.update { it.copy(isLoading = true, errorMessage = "") }
-
-            val tasks = apiService.getAllTasks(bearerToken)
-
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    tasks = tasks,
-                    errorMessage = ""
-                )
-            }
-
-        }catch (e:Exception){
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    errorMessage = "Error: ${e.localizedMessage}"
-                )
-            }
-        }
-    }
     suspend fun loadTasks(username: String, forceReload: Boolean = false) {
         if (initialLoadAttempted && !forceReload) {
             return
@@ -95,7 +71,7 @@ class TaskViewModel(private val token: String) : ViewModel() {
 
     suspend fun updateTaskStatus(taskId: Int, isCompleted: Boolean) {
         try {
-            val updateRequest = TaskUpdateRequest(null,null,null,completada = isCompleted)
+            val updateRequest = TaskUpdateRequest(estado = isCompleted)
             apiService.updateTaskStatus(taskId, updateRequest,bearerToken)
 
             // Actualizar la lista local después de actualizar en el servidor

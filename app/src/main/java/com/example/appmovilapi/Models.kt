@@ -41,8 +41,5 @@ data class TaskInsert(
 
 // Solicitud para actualizar el estado de una tarea
 data class TaskUpdateRequest(
-    val titulo: String?,
-    val descripcion: String?,
-    val usuario: String?,
-    val completada: Boolean
+    val estado: Boolean
 )

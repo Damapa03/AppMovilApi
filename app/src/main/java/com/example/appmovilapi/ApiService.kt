@@ -22,9 +22,6 @@ interface ApiService {
     @GET("/tarea/{username}")
     suspend fun getUserTasks(@Path("username") username: String, @Header("Authorization") token: String): List<Task>
 
-    @GET("/tarea")
-    suspend fun getAllTasks(@Header("Authorization") token: String): List<Task>
-
     @POST("/tarea")
     suspend fun postTask(@Body tareaInsert: TaskInsert, @Header("Authorization") token: String)
 

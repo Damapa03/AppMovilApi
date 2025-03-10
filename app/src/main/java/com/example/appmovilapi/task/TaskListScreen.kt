@@ -3,7 +3,6 @@ package com.example.appmovilapi.task
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -14,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -62,9 +60,6 @@ fun TaskListScreen(
 
     LaunchedEffect(key1 = Unit) {
         if (username.isNotEmpty() && token.isNotEmpty()) {
-            if ("ROLE_ADMIN" in roles) {
-                ejecutarFuncionAdmin(taskViewModel)
-            }
             taskViewModel.loadTasks(username)
         }
     }
@@ -82,8 +77,10 @@ fun TaskListScreen(
                 title = { Text("Tareas de $username") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Volver atrás")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Volver atrás"
+                        )
                     }
                 },
                 actions = {
@@ -124,6 +121,7 @@ fun TaskListScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
+
                 uiState.tasks.isEmpty() -> {
                     Column(
                         modifier = Modifier
@@ -161,6 +159,7 @@ fun TaskListScreen(
                         }
                     }
                 }
+
                 else -> {
                     TaskList(
                         tasks = uiState.tasks,
@@ -196,8 +195,3 @@ fun TaskList(
     }
 }
 
-suspend fun ejecutarFuncionAdmin(taskViewModel: TaskViewModel) {
-    println("🔹 Usuario con ROLE_ADMIN detectado. Ejecutando función especial...")
-    // Aquí puedes realizar alguna acción especial, como cargar todas las tareas
-    taskViewModel.loadAdminTasks()
-}
