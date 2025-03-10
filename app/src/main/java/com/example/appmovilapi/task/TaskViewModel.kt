@@ -1,6 +1,7 @@
 package com.example.appmovilapi.task
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.appmovilapi.ApiService
 import com.example.appmovilapi.Task
 import com.example.appmovilapi.TaskUpdateRequest
@@ -8,16 +9,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class TaskViewModel(private val token: String) : ViewModel() {
     private val _uiState = MutableStateFlow(TaskUiState())
     val uiState: StateFlow<TaskUiState> = _uiState.asStateFlow()
+
+    private var initialLoadAttempted = false
 
     private val bearerToken = "Bearer $token"
 
     private val apiService = ApiService.create()
 
     suspend fun loadAdminTasks(){
+
         try {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
 
@@ -40,19 +45,36 @@ class TaskViewModel(private val token: String) : ViewModel() {
             }
         }
     }
-    suspend fun loadTasks(username: String) {
+    suspend fun loadTasks(username: String, forceReload: Boolean = false) {
+        if (initialLoadAttempted && !forceReload) {
+            return
+        }
         try {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
 
-            val tasks = apiService.getUserTasks(username, bearerToken)
+            try {
+                val tasks = apiService.getUserTasks(username, bearerToken)
 
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    tasks = tasks,
-                    errorMessage = ""
-                )
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        tasks = tasks,
+                        errorMessage = ""
+                    )
+                }
+            }catch (e: Exception){
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        tasks = emptyList(),
+                        errorMessage = "Error de conexión: ${e.localizedMessage}"
+                    )
+                }
+                println("Error de conexión: ${e.message}")
             }
+
+            initialLoadAttempted = true
+
         } catch (e: Exception) {
             _uiState.update {
                 it.copy(
@@ -60,6 +82,14 @@ class TaskViewModel(private val token: String) : ViewModel() {
                     errorMessage = "Error: ${e.localizedMessage}"
                 )
             }
+            initialLoadAttempted = true
+        }
+    }
+
+    fun refreshTasks(username: String) {
+        // Lanzamos una coroutine en el viewModelScope
+        viewModelScope.launch {
+            loadTasks(username, forceReload = true)
         }
     }
 
