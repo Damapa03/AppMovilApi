@@ -46,12 +46,12 @@ fun AppNavigation() {
             val token = backStackEntry.arguments?.getString("token") ?: ""
             TaskListScreen(
                 username = username,
-                token = token,
                 onNavigateBack = {
                     navController.navigate("login") {
                         popUpTo("login") { inclusive = true }
                     }
-                }
+                },
+                token = token
             )
         }
     }

@@ -17,7 +17,25 @@ class TaskViewModel(private val token: String) : ViewModel() {
 
     suspend fun loadAdminTasks(){
         try {
-            _uiState.update { it.copy(isLoading = true, errorMessage = ) }
+            _uiState.update { it.copy(isLoading = true, errorMessage = "") }
+
+            val tasks = apiService.getAllTasks(token)
+
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    tasks = tasks,
+                    errorMessage = ""
+                )
+            }
+
+        }catch (e:Exception){
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessage = "Error: ${e.localizedMessage}"
+                )
+            }
         }
     }
     suspend fun loadTasks(username: String) {

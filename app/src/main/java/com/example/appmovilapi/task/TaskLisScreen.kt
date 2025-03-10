@@ -34,11 +34,12 @@ import kotlinx.coroutines.launch
 fun TaskListScreen(
     username: String,
     onNavigateBack: () -> Unit,
-    taskViewModel: TaskViewModel = viewModel(),
-    token: String
+    token: String,
+    taskViewModel: TaskViewModel = viewModel(factory = TaskViewModelFactory(token))
 ) {
     val uiState by taskViewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
+
 
     // Efecto para cargar las tareas al entrar a la pantalla
     LaunchedEffect(username) {
