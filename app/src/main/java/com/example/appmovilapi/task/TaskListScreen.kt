@@ -202,7 +202,6 @@ fun TaskList(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        println("Lista tareas: $tasks")
         items(tasks) { task ->
             TaskItem(
                 task = task,

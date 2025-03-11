@@ -32,8 +32,6 @@ class TaskViewModel(private val token: String) : ViewModel() {
             try {
                 val tasks = apiService.getUserTasks(username, bearerToken)
 
-                println("Tareas desde peticion: $tasks")
-
                 _uiState.update {
                     it.copy(
                         isLoading = false,

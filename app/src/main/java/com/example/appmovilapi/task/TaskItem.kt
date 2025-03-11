@@ -33,11 +33,12 @@ fun TaskItem(
             .fillMaxWidth()
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onLongPress = { onLongPress }
+                    onDoubleTap = {
+                        onLongPress(task._id)
+                        println("doble tap")
+                    }
                 )
             }
-        ,
-        onClick = { }
     ) {
         Row(
             modifier = Modifier
