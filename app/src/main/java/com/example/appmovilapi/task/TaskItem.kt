@@ -1,5 +1,6 @@
 package com.example.appmovilapi.task
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -23,10 +25,18 @@ import com.example.appmovilapi.Task
 @Composable
 fun TaskItem(
     task: Task,
-    onTaskCheckedChange: (String, Boolean) -> Unit
+    onTaskCheckedChange: (String, Boolean) -> Unit,
+    onLongPress: (String) -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = { onLongPress }
+                )
+            }
+        ,
         onClick = { }
     ) {
         Row(

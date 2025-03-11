@@ -176,6 +176,12 @@ fun TaskListScreen(
                             scope.launch {
                                 taskViewModel.updateTaskStatus(taskId, isCompleted)
                             }
+                        },
+                        onLongPress = { taskId ->
+                            scope.launch {
+                                taskViewModel.deleteTask(taskId)
+                            }
+
                         }
                     )
                 }
@@ -187,7 +193,8 @@ fun TaskListScreen(
 @Composable
 fun TaskList(
     tasks: List<Task>,
-    onTaskCheckedChange: (String, Boolean) -> Unit
+    onTaskCheckedChange: (String, Boolean) -> Unit,
+    onLongPress: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -199,7 +206,8 @@ fun TaskList(
         items(tasks) { task ->
             TaskItem(
                 task = task,
-                onTaskCheckedChange = onTaskCheckedChange
+                onTaskCheckedChange = onTaskCheckedChange,
+                onLongPress = onLongPress
             )
         }
     }

@@ -98,6 +98,23 @@ class TaskViewModel(private val token: String) : ViewModel() {
         }
     }
 
+    suspend fun deleteTask(id: String){
+        try{
+            apiService.deleteTask(id, bearerToken)
+
+            _uiState.update { currentState ->
+                val updatedTasks = currentState.tasks.filterNot { it._id == id }
+                currentState.copy(tasks = updatedTasks)
+            }
+        }catch (e: Exception){
+            _uiState.update {
+                it.copy(
+                    errorMessage = "Error al borrar: ${e.localizedMessage}"
+                )
+            }
+        }
+    }
+
     suspend fun createTask(title: String, description: String, username: String) {
         try {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
