@@ -25,9 +25,9 @@ interface ApiService {
     @POST("/tarea")
     suspend fun postTask(@Body tareaInsert: TaskInsert, @Header("Authorization") token: String)
 
-    @PUT("/tasks/{taskId}")
+    @PUT("/tarea/{taskId}")
     suspend fun updateTaskStatus(
-        @Path("taskId") taskId: Int,
+        @Path("taskId") taskId: String,
         @Body updateRequest: TaskUpdateRequest,
         @Header("Authorization") token: String
     )

@@ -187,7 +187,7 @@ fun TaskListScreen(
 @Composable
 fun TaskList(
     tasks: List<Task>,
-    onTaskCheckedChange: (Int, Boolean) -> Unit
+    onTaskCheckedChange: (String, Boolean) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -195,6 +195,7 @@ fun TaskList(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        println("Lista tareas: $tasks")
         items(tasks) { task ->
             TaskItem(
                 task = task,

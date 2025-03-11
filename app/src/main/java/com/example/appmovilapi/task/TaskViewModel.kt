@@ -32,6 +32,8 @@ class TaskViewModel(private val token: String) : ViewModel() {
             try {
                 val tasks = apiService.getUserTasks(username, bearerToken)
 
+                println("Tareas desde peticion: $tasks")
+
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -70,7 +72,7 @@ class TaskViewModel(private val token: String) : ViewModel() {
         }
     }
 
-    suspend fun updateTaskStatus(taskId: Int, isCompleted: Boolean) {
+    suspend fun updateTaskStatus(taskId: String, isCompleted: Boolean) {
         try {
             val updateRequest = TaskUpdateRequest(estado = isCompleted)
             apiService.updateTaskStatus(taskId, updateRequest,bearerToken)
@@ -78,7 +80,7 @@ class TaskViewModel(private val token: String) : ViewModel() {
             // Actualizar la lista local después de actualizar en el servidor
             _uiState.update { currentState ->
                 val updatedTasks = currentState.tasks.map { task ->
-                    if (task.id == taskId) {
+                    if (task._id == taskId) {
                         task.copy(completada = isCompleted)
                     } else {
                         task

@@ -23,7 +23,7 @@ import com.example.appmovilapi.Task
 @Composable
 fun TaskItem(
     task: Task,
-    onTaskCheckedChange: (Int, Boolean) -> Unit
+    onTaskCheckedChange: (String, Boolean) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -59,7 +59,7 @@ fun TaskItem(
             Checkbox(
                 checked = task.completada,
                 onCheckedChange = { isChecked ->
-                    onTaskCheckedChange(task.id, isChecked)
+                    onTaskCheckedChange(task._id, isChecked)
                 }
             )
         }

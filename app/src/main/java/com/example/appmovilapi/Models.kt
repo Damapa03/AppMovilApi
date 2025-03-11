@@ -25,7 +25,7 @@ data class RegisterResponse(
 )
 
 data class Task(
-    val id: Int,
+    val _id: String,
     val titulo: String,
     val descripcion: String,
     val usuario: String,
