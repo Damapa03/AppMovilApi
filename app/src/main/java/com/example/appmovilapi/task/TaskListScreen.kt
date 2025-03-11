@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -53,6 +54,8 @@ fun TaskListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    var showCreateTaskDialog by remember { mutableStateOf(false) }
+
     val errorShown = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
@@ -67,6 +70,15 @@ fun TaskListScreen(
         }
     }
 
+    CreateTaskDialog(
+        showDialog = showCreateTaskDialog,
+        onDismiss = { showCreateTaskDialog = false },
+        onCreateTask = { title, description ->
+            scope.launch {
+                taskViewModel.createTask(title, description, username)
+            }
+        }
+    )
 
     Scaffold(
         topBar = {
@@ -98,7 +110,7 @@ fun TaskListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* Implementar función para agregar tarea */ }) {
+            FloatingActionButton(onClick = { showCreateTaskDialog = true }) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = "Agregar tarea"

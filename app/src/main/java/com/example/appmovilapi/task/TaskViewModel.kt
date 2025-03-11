@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appmovilapi.ApiService
 import com.example.appmovilapi.Task
+import com.example.appmovilapi.TaskInsert
 import com.example.appmovilapi.TaskUpdateRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -94,6 +95,32 @@ class TaskViewModel(private val token: String) : ViewModel() {
             }
         }
     }
+
+    suspend fun createTask(title: String, description: String, username: String) {
+        try {
+            _uiState.update { it.copy(isLoading = true, errorMessage = "") }
+
+            val taskInsert = TaskInsert(
+                titulo = title,
+                descripcion = description,
+                usuario = username
+            )
+
+            apiService.postTask(taskInsert, bearerToken)
+
+            // Recargar la lista de tareas para mostrar la nueva tarea
+            loadTasks(username, forceReload = true)
+
+        } catch (e: Exception) {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    errorMessage = "Error al crear tarea: ${e.localizedMessage}"
+                )
+            }
+        }
+    }
+
 }
 
 data class TaskUiState(
